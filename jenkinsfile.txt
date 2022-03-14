@@ -1,0 +1,33 @@
+pipeline{
+    agent any
+    
+    tools {
+        
+        maven "maven-3.8.4"
+        
+    }
+    
+    stages {
+        stage ('scm') {
+            steps{
+                git branch: 'dev', credentialsId: 'git-cred', url: 'https://github.com/krishnasiri/aws-linux.git'
+                
+            }
+            
+        }
+        
+        stage ('maven') {
+            steps {
+                bat 'mvn clean'
+            }
+        }
+        
+        stage ('server') {
+            steps {
+                withCredentials([sshUserPrivateKey(credentialsId: 'tom', keyFileVariable: 'tom-key', passphraseVariable: 'tom-pass', usernameVariable: 'ec2-user')]) {
+    // some block
+}
+            }
+        }
+    }
+}
